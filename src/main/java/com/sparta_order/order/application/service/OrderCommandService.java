@@ -8,6 +8,7 @@ import com.sparta_order.order.domain.Order;
 import com.sparta_order.order.domain.request.OrderCancelRequest;
 import com.sparta_order.order.domain.request.OrderCreateRequest;
 import com.sparta_order.product.application.port.in.ProductFinder;
+import com.sparta_order.product.application.service.ProductCommandService;
 import com.sparta_order.product.domain.Product;
 
 import lombok.RequiredArgsConstructor;
@@ -21,15 +22,36 @@ public class OrderCommandService {
 	
 	private final ProductFinder productFinder;
 	
-	// 1. 주문 등록
+	private final ProductCommandService productCommand;
+	
+//	// 1. 주문 등록
+//	public OrderSummary createOrder(OrderCreateRequest orderCreate) {
+//		Product product = productFinder.getProductById(orderCreate.productId());
+//		
+//		Order order = Order.create(product, orderCreate.quantity());
+//		
+//		Order entity = orderRepo.save(order);
+//		
+//		product.orderStockDecrease(entity.getQuantity());
+//		
+//		return OrderSummary.of(entity);
+//	}
+	
+	// 1. 주문 등록 Lost Update 해결 Row Lock
 	public OrderSummary createOrder(OrderCreateRequest orderCreate) {
 		Product product = productFinder.getProductById(orderCreate.productId());
+		
+		// updateCount == 0 : 실패
+		// updateCount == 1 : 성공
+		int updateCount = productCommand.decreaseStock(product.getId(), orderCreate.quantity());
+		
+		if(updateCount == 0) {
+			throw new IllegalStateException("재고가 부족하여 주문이 취소되었습니다.");
+		}
 		
 		Order order = Order.create(product, orderCreate.quantity());
 		
 		Order entity = orderRepo.save(order);
-		
-		product.orderStockDecrease(entity.getQuantity());
 		
 		return OrderSummary.of(entity);
 	}

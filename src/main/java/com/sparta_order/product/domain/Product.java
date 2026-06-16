@@ -183,13 +183,14 @@ public class Product {
 		return true;
 	}
 	
-	public void orderStockDecrease(Integer quantity) {
-		this.stock -= quantity;
-		
-		if(this.stock < 0) {
-			throw new IllegalArgumentException("주문 수량에 비해 재고가 부족하여 주문이 취소되었습니다.");
-		}
-	}
+// OrderCommandService createOrder 수정으로 인해 필요없어짐.
+//	public void orderStockDecrease(Integer quantity) {
+//		this.stock -= quantity;
+//		
+//		if(this.stock < 0) {
+//			throw new IllegalArgumentException("주문 수량에 비해 재고가 부족하여 주문이 취소되었습니다.");
+//		}
+//	}
 	
 	// ===== Private Method =====
 	

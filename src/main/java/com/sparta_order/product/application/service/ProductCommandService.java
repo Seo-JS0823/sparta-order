@@ -89,4 +89,8 @@ public class ProductCommandService {
 		return productRepo.save(product);
 	}
 	
+	public int decreaseStock(Long productId, Integer quantity) {
+		return productRepo.decreaseStock(productId, quantity);
+	}
+	
 }

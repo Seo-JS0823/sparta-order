@@ -1,6 +1,6 @@
 package com.sparta_order.product.application.service;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +31,12 @@ public class ProductFindService implements ProductFinder {
 				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
 	}
 	
-	public Optional<Product> getProductByName(String name) {
-		return productRepo.findByName(name);
+	public List<ProductDTO> getProductListByName(String name) {
+		List<Product> product = productRepo.findByNameContainingIgnoreCase(name);
+		
+		return product.stream()
+				.map(ProductDTO::of)
+				.toList();
 	}
 	
 }
