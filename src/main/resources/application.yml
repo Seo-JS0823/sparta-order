@@ -1,0 +1,19 @@
+spring:
+  application.name: sparta-order
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      open-in-view: false
+      hibernate:
+        '[format_sql]': true
+  h2:
+    console:
+      enabled: true
