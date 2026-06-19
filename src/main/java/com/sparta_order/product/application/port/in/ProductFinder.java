@@ -7,4 +7,6 @@ public interface ProductFinder {
 	ProductDTO getProductDtoById(Long productId);
 	
 	Product getProductById(Long productId);
+	
+	Product getProductByIdNotDelete(Long productId);
 }

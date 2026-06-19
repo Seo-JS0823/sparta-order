@@ -31,12 +31,16 @@ public class ProductFindService implements ProductFinder {
 				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
 	}
 	
-	public List<ProductDTO> getProductListByName(String name) {
-		List<Product> product = productRepo.findByNameContainingIgnoreCase(name);
+	public List<Product> getProductListByNameNotDelete(String name) {
+		List<Product> product = productRepo.findByNameContainingIgnoreCaseAndDeletedAtIsNull(name);
 		
-		return product.stream()
-				.map(ProductDTO::of)
-				.toList();
+		return product;
+	}
+
+	@Override
+	public Product getProductByIdNotDelete(Long productId) {
+		return productRepo.findByIdAndDeletedAtIsNull(productId)
+				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
 	}
 	
 }

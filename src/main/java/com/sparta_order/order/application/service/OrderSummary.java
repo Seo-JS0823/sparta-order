@@ -1,13 +1,11 @@
 package com.sparta_order.order.application.service;
 
 import com.sparta_order.order.domain.Order;
+import com.sparta_order.order.domain.OrderStatus;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrderSummary {
 	
 	private final Long orderId;
@@ -20,13 +18,21 @@ public class OrderSummary {
 	
 	private final String status;
 	
+	public OrderSummary(Long orderId, String productName, Integer quantity, Long totalPrice, OrderStatus status) {
+		this.orderId = orderId;
+		this.productName = productName;
+		this.quantity = quantity;
+		this.totalPrice = totalPrice;
+		this.status = status.getInfo();
+	}
+	
 	public static OrderSummary of(Order order) {
 		OrderSummary summary = new OrderSummary(
 				order.getId(),
 				order.getProductName(),
 				order.getQuantity(),
 				order.getTotalPrice(),
-				order.getStatus().getInfo()
+				order.getStatus()
 		);
 		
 		return summary;

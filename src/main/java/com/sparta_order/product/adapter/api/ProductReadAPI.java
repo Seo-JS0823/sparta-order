@@ -12,6 +12,7 @@ import com.sparta_order._global.response.ApiResponse;
 import com.sparta_order._global.response.ResponseCode;
 import com.sparta_order.product.application.service.ProductDTO;
 import com.sparta_order.product.application.service.ProductFindService;
+import com.sparta_order.product.domain.Product;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,17 +24,25 @@ public class ProductReadAPI {
 	private final ProductFindService productFinder;
 	
 	@GetMapping("/{productId}")
-	public ApiResponse<ProductDTO> productOneRead(@PathVariable Long productId) {
-		ProductDTO product = productFinder.getProductDtoById(productId);
+	public ApiResponse<ProductResponse> productOneRead(@PathVariable Long productId) {
+		Product product = productFinder.getProductByIdNotDelete(productId);
 		
-		return ApiResponse.response(ResponseCode.SUCCESS, product);
+		ProductResponse data = ProductResponse.of(product, "");
+		
+		return ApiResponse.response(ResponseCode.SUCCESS, data);
 	}
 	
 	@GetMapping("")
-	public ApiResponse<List<ProductDTO>> productOneNameRead(@RequestParam String name) {
-		List<ProductDTO> productList = productFinder.getProductListByName(name);
+	public ApiResponse<List<ProductResponse>> productOneNameRead(@RequestParam String name) {
+		List<Product> productList = productFinder.getProductListByNameNotDelete(name);
 		
-		return ApiResponse.response(ResponseCode.SUCCESS, productList);
+		List<ProductResponse> data = productList.stream()
+				.map(pro -> {
+					return ProductResponse.of(pro, null);
+				})
+				.toList();
+		
+		return ApiResponse.response(ResponseCode.SUCCESS, data);
 	}
 	
 }
